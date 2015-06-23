@@ -101,7 +101,7 @@ graph.code <- function(y.value, x = "methodReceived", y = "code", stat.test= "me
         #Removes reporting methods and 311 codes that have not met specified reporting minimums
         x.table<-table(closed.data[[x]])
         y.table<-table(closed.data[[y]])
-        x.index<- x.table > min.x
+        x.index<- x.table > 0
         y.index<- y.table > 0
         x.names <- names(x.table[x.index])
         y.names <- names(y.table[y.index])
@@ -128,8 +128,9 @@ graph.code <- function(y.value, x = "methodReceived", y = "code", stat.test= "me
         y.data[[x]]<-rownames(y.data)
         y.data[[x]] = reorder(y.data[[3]], 1:length(y.data[[3]]))
         names(y.data)[1]<-y
+        y.data<-y.data[y.data$count.data>=min.x,]
         #Creates a barplot
-        png(png.name, 1000+4*length(levels(y.data[[x]])))
+        png(png.name, 500+4*length(levels(y.data[[x]])))
         plot<-ggplot(y.data, 
                      aes(y.data[[x]], y=y.data[[y]]), environment = environment()) + 
                 geom_bar(stat="identity", fill = "grey") +
@@ -144,3 +145,10 @@ graph.code <- function(y.value, x = "methodReceived", y = "code", stat.test= "me
         dev.off()
         print("Success!")
 }
+code.desc <- function (code) {
+    grep(code, closed.data$code)->code.name
+    code.name<-code.name[1]
+    paste(code,"=",as.character((closed.data$codeDescription[[code.name]]), sep = " "))
+}
+    
+    
