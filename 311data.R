@@ -146,9 +146,21 @@ graph.code <- function(y.value, x = "methodReceived", y = "code", stat.test= "me
         print("Success!")
 }
 code.desc <- function (code) {
-    grep(code, closed.data$code)->code.name
-    code.name<-code.name[1]
-    paste(code,"=",as.character((closed.data$codeDescription[[code.name]]), sep = " "))
-}
     
+    #lists all the data in close.data for code
+    grep(code, closed.data$code)->code.name
+    
+    #indexes the first instance
+    code.name<-code.name[1]
+    
+    test.2<-as.character((closed.data$codeDescription[[code.name]]))
+    test.3<-strsplit(test.2,"-")
+    test.4<-test.3[[1]][2]
+    test.5<-grep(test.4, code.descriptions$Short)->code.name
+    
+    paste.2<-code.descriptions[[2]][test.5]
+                
+    #pastes the codeDescription for that instance
+    paste(code,"=",test.2,"-",paste.2, sep = " ")
+}
     
